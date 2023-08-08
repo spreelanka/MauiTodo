@@ -1,1 +1,3 @@
 # MauiTodo
+
+[[MauiTodo plan]]
