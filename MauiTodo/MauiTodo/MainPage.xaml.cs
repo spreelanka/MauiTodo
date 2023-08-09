@@ -34,7 +34,8 @@ public partial class MainPage : ContentPage
 
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
+        Shell.Current.GoToAsync("//AllTodoListsPage");
+        count++;
         dataProvider.Put<Data>(new Data { Count = new Count { Value = count } });
         updateText();
 	}

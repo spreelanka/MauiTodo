@@ -60,10 +60,12 @@
 	  <None Remove="Models\" />
 	  <None Remove="ViewModels\" />
 	  <None Remove="Services\" />
+	  <None Remove="Views\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Models\" />
 	  <Folder Include="ViewModels\" />
 	  <Folder Include="Services\" />
+	  <Folder Include="Views\" />
 	</ItemGroup>
 </Project>
