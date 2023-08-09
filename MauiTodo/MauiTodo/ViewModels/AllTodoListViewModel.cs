@@ -47,6 +47,7 @@ namespace MauiTodo.ViewModels
 						TodoLists = new List<TodoList>{
 							new TodoList
 							{
+                                Id=100,
 								Title = "bluelist",
 								Items = new List<TodoItem>{
                                     new TodoItem{
@@ -65,6 +66,7 @@ namespace MauiTodo.ViewModels
 							},
                             new TodoList
                             {
+                                Id=101,
                                 Title = "redlist",
                                 Items = new List<TodoItem>{
                                     new TodoItem{
@@ -91,6 +93,6 @@ namespace MauiTodo.ViewModels
 			});
 			
 		}
-	}
+    }
 }
 

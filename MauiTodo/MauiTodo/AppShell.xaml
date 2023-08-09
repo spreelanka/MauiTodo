@@ -15,6 +15,10 @@
         Title="Todo Lists"
         ContentTemplate="{DataTemplate local:AllTodoListsPage}"
         Route="AllTodoListsPage" />
+    <ShellContent
+        Title="Todo List"
+        ContentTemplate="{DataTemplate local:TodoListPage}"
+        Route="TodoListPage" />
 
 </Shell>
 
