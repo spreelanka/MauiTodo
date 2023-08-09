@@ -35,7 +35,9 @@ namespace MauiTodo.Services
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
                 using FileStream InputStream = System.IO.File.OpenRead(targetFile);
                 using StreamReader reader = new StreamReader(InputStream);
-                return await reader.ReadToEndAsync();
+                var result = await reader.ReadToEndAsync();
+                reader.Close();
+                return result;
             }
             catch (Exception ex)
             {
@@ -51,16 +53,12 @@ namespace MauiTodo.Services
                 using FileStream outputStream = System.IO.File.OpenWrite(targetFile);
                 using StreamWriter streamWriter = new StreamWriter(outputStream);
                 await streamWriter.WriteAsync(raw);
+                streamWriter.Close();
             }
             catch (Exception ex)
             {
 
             }
-        }
-
-        private class Data
-        {
-            public int Count { get; set; }
         }
     }
 }
