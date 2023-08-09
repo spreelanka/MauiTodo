@@ -3,10 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label Text="{Binding TodoList.Title}"
+                   VerticalOptions="Center"
+                                HorizontalOptions="Center" />
+            <ListView ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected">
+                <ListView.ItemTemplate >
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label
+                                Text="{Binding Title}"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center" />
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

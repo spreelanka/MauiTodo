@@ -1,4 +1,5 @@
 ﻿using System;
+using MauiTodo.Models;
 using Newtonsoft.Json;
 
 namespace MauiTodo.Services
@@ -12,11 +13,19 @@ namespace MauiTodo.Services
         public async Task<T> Get<T>(int id)
         {
             var raw = await read();
-            var data = JsonConvert.DeserializeObject<T>(raw, new JsonSerializerSettings
+            var data = JsonConvert.DeserializeObject<Data>(raw, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
             });
-            return data;
+            if(typeof(T) == typeof(TodoList))
+            {
+                var result = data.AllTodoLists.TodoLists.Where((e) => e.Id == id).First();
+                return (T)Convert.ChangeType(result, typeof(T));
+            }
+            return JsonConvert.DeserializeObject<T>(raw, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
         }
 
         public Task Put<T>(T data)

@@ -3,7 +3,8 @@ namespace MauiTodo.Models
 {
 	public class TodoList
 	{
-		public string Title { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
 		public List<TodoItem> Items { get; set; }
 	}
 }
