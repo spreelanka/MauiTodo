@@ -4,6 +4,7 @@ using MauiTodo.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Web;
 using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace MauiTodo.ViewModels
 {
@@ -32,11 +33,6 @@ namespace MauiTodo.ViewModels
                 }
             }
         };
-        //IEnumerable<TodoList> todoLists;
-        //public IEnumerable<TodoList> TodoLists
-        //{
-        //    get =>
-        //}
 
         public AllTodoListViewModel(IDataProvider dataProvider)
         {
@@ -62,6 +58,14 @@ namespace MauiTodo.ViewModels
             var d = await dataProvider.Get<Data>(0);
             var l = d.AllTodoLists;
             Data = d;
+        }
+
+        [RelayCommand]
+        async Task AddTodoList()
+        {
+            await dataProvider.Put(new TodoList { Title = "new todolist" });
+            await dataProvider.Save();
+            await getData();
         }
 
 

@@ -81,7 +81,15 @@ namespace MauiTodo.Services
                     var index = data.AllTodoLists.TodoLists.IndexOf(
                         data.AllTodoLists.TodoLists.Where(l => l.Id == list.Id).FirstOrDefault()
                         );
-                    data.AllTodoLists.TodoLists[index] = list;
+                    if (index != -1)
+                    {
+                        data.AllTodoLists.TodoLists[index] = list;
+                    }
+                    else
+                    {
+                        list.Id = data.AllTodoLists.TodoLists.Max(e => e.Id) + 1;
+                        data.AllTodoLists.TodoLists.Insert(0, list);
+                    }
                     return;
                 }
                 if (typeof(T) == typeof(Count))
