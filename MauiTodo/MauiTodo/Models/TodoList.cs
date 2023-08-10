@@ -1,11 +1,17 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace MauiTodo.Models
 {
-	public class TodoList
+	[ObservableObject]
+	public partial class TodoList
 	{
-        public int Id { get; set; }
-        public string Title { get; set; }
-		public List<TodoItem> Items { get; set; }
+		[ObservableProperty]
+		int id;
+		[ObservableProperty]
+		string title;
+		[ObservableProperty]
+		Dictionary<int, TodoItem> items;
 	}
 }
 
