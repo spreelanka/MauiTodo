@@ -7,20 +7,22 @@ using static System.Net.Mime.MediaTypeNames;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+    int count = 0;
     IDataProvider dataProvider;
 
     public MainPage(IDataProvider dataProvider)
-	{
+    {
         this.dataProvider = dataProvider;
-		InitializeComponent();
-		Task.Run(async () =>
-		{
-            var d = await dataProvider.Get<Data>(0);
-            count = d.Count.Value;
+        InitializeComponent();
+        Task.Run(async () =>
+        {
+
+            var d = await dataProvider.Get<Count>(0);
+            count = d.Value;
             updateText();
         });
-	}
+    }
+
     private void updateText()
     {
         if (count == 1)
@@ -31,13 +33,15 @@ public partial class MainPage : ContentPage
         SemanticScreenReader.Announce(CounterBtn.Text);
     }
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
+    private void OnCounterClicked(object sender, EventArgs e)
+    {
         Shell.Current.GoToAsync("//AllTodoListsPage");
         count++;
-        dataProvider.Put<Data>(new Data { Count = new Count { Value = count } });
+        dataProvider.Put<Count>(new Count { Value = count });
         updateText();
-	}
+    }
+
+
 }
 
 

@@ -1,9 +1,13 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace MauiTodo.Models
 {
-	public class Count
+	[ObservableObject]
+	public partial class Count
 	{
-		public int Value { get; set; }
+		[ObservableProperty]
+		int value;
 	}
 }
 

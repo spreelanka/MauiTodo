@@ -1,9 +1,13 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace MauiTodo.Models
 {
-	public class AllTodoLists
-	{ 
-		public List<TodoList> TodoLists { get; set; }
+	[ObservableObject]
+	public partial class AllTodoLists
+	{
+		[ObservableProperty]
+		Dictionary<int, TodoList> todoLists;
 	}
 }
 

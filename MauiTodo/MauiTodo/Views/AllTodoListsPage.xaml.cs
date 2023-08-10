@@ -17,7 +17,7 @@ public partial class AllTodoListsPage : ContentPage
 			return;
 		if(e.SelectedItem is TodoList list)
 		{
-			Shell.Current.GoToAsync($"//TodoListPage?{nameof(TodoList.Id)}={list.Id}");
+            Shell.Current.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
 		}
     }
 }

@@ -1,10 +1,15 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace MauiTodo.Models
 {
-    public class Data
+    [ObservableObject]
+    public partial class Data
     {
-        public Count Count { get; set; }
-        public AllTodoLists AllTodoLists { get;set;}
+        [ObservableProperty]
+        Count count;
+        [ObservableProperty]
+        AllTodoLists allTodoLists;
     }
 }
 

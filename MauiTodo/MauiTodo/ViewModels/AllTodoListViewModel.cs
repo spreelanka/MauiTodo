@@ -1,29 +1,32 @@
-﻿	using System;
+﻿using System;
 using MauiTodo.Services;
 using MauiTodo.Models;
-
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Web;
 
 namespace MauiTodo.ViewModels
 {
-	public class AllTodoListViewModel : BaseObservable
-	{
-		IDataProvider dataProvider;
-        public Data Data { get; set; } = new Data
+    [ObservableObject]
+    public partial class AllTodoListViewModel : IQueryAttributable
+    {
+        IDataProvider dataProvider;
+        [ObservableProperty]
+        Data data = new Data
         {
             Count = new Count { Value = 500 },
             AllTodoLists = new AllTodoLists
             {
-                TodoLists = new List<TodoList>{
-                            new TodoList
+                TodoLists = new Dictionary<int, TodoList>{
+                            {5000, new TodoList
                             {
                                 Title = "defaultlist",
-                                Items = new List<TodoItem>{
-                                    new TodoItem{
-                                        Id =-1,
-                                        Title = $"empty{-1}"
-                                    }
+                                Items = new Dictionary<int, TodoItem>{
+                                    {500, new TodoItem{
+                                        Id =500,
+                                        Title = $"empty{500}"
+                                    } }
                                 }
-                            }
+                            } }
                 }
             }
         };
@@ -34,65 +37,32 @@ namespace MauiTodo.ViewModels
         //}
 
         public AllTodoListViewModel(IDataProvider dataProvider)
-		{
-			this.dataProvider = dataProvider;
-			Task.Run(async () =>
-			{
-				var id = 1;
-				await dataProvider.Put<Data>(new Data
-				{
-					Count = new Count { Value = 2 },
-					AllTodoLists = new AllTodoLists
-					{
-						TodoLists = new List<TodoList>{
-							new TodoList
-							{
-                                Id=100,
-								Title = "bluelist",
-								Items = new List<TodoItem>{
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"test{id}"
-                                    },
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"test{id}"
-                                    },
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"test{id}"
-                                    }
-                                }
-							},
-                            new TodoList
-                            {
-                                Id=101,
-                                Title = "redlist",
-                                Items = new List<TodoItem>{
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"junk{id}"
-                                    },
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"junk{id}"
-                                    },
-                                    new TodoItem{
-                                        Id =id++,
-                                        Title = $"junk{id}"
-                                    }
-                                }
-                            }
-                        }
-					}
-				});
-                var d = await dataProvider.Get<Data>(0);
-				var l = d.AllTodoLists;
-                Data = d;
-                OnPropertyChanged(nameof(Data));
-			});
-			
-		}
+        {
+            this.dataProvider = dataProvider;
+            getData();
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            getData();
+            //var raw = HttpUtility.UrlDecode(query[nameof(TodoList.Id)].ToString());
+            //int id;
+            //if (int.TryParse(raw, out id))
+            //    Task.Run(async () =>
+            //    {
+            //        TodoList = await dataProvider.Get<TodoList>(id);
+            //        TodoList.PropertyChanged += TodoList_PropertyChanged;
+            //    });
+        }
+
+        async Task getData()
+        {
+            var d = await dataProvider.Get<Data>(0);
+            var l = d.AllTodoLists;
+            Data = d;
+        }
+
+
     }
 }
 

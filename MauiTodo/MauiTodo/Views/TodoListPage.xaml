@@ -3,19 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding GoBackCommand}" TextOverride="Back  "
+                            />   
+                            <!--IconOverride="back.png"-->
+    </Shell.BackButtonBehavior>
+
     <ScrollView>
         <VerticalStackLayout>
-            <Label Text="{Binding TodoList.Title}"
+            <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
                    VerticalOptions="Center"
                                 HorizontalOptions="Center" />
-            <ListView ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected">
+            <ListView ItemsSource="{Binding TodoList.Items.Values}" ItemSelected="ListView_ItemSelected">
                 <ListView.ItemTemplate >
                     <DataTemplate>
                         <ViewCell>
-                            <Label
-                                Text="{Binding Title}"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center" />
+                            <StackLayout Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Complete}" />
+
+                                <Entry
+                                    Placeholder="New Item"
+                                    Text="{Binding Title}"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center" />
+                                <Button
+                                    Text="X" />
+                            </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
