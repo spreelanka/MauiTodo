@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiTodo.ViewModels"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior Command="{Binding GoBackCommand}" TextOverride="Back  "
                             />   
-                            <!--IconOverride="back.png"-->
     </Shell.BackButtonBehavior>
 
     <ScrollView>
@@ -14,7 +14,7 @@
             <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
                    VerticalOptions="Center"
                                 HorizontalOptions="Center" />
-            <ListView ItemsSource="{Binding TodoList.Items.Values}" ItemSelected="ListView_ItemSelected">
+            <ListView ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected">
                 <ListView.ItemTemplate >
                     <DataTemplate>
                         <ViewCell>
@@ -27,7 +27,10 @@
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center" />
                                 <Button
-                                    Text="X" />
+                                    Text="X"
+                                    Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
+                                    CommandParameter="{Binding Id}"
+                                    />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

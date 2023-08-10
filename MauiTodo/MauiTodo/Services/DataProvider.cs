@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using MauiTodo.Models;
 using Newtonsoft.Json;
 
@@ -43,7 +44,7 @@ namespace MauiTodo.Services
                 await loaded.Task;
                 if (typeof(T) == typeof(TodoList))
                 {
-                    var result = data.AllTodoLists.TodoLists.GetValueOrDefault(id);
+                    var result = data.AllTodoLists.TodoLists.Where(l => l.Id == id).FirstOrDefault();
                     return (T)Convert.ChangeType(result, typeof(T));
                 }
                 if (typeof(T) == typeof(Count))
@@ -76,7 +77,11 @@ namespace MauiTodo.Services
                 if (typeof(T) == typeof(TodoList))
                 {
                     var list = (TodoList)Convert.ChangeType(value, typeof(TodoList));
-                    data.AllTodoLists.TodoLists[list.Id] = list;
+
+                    var index = data.AllTodoLists.TodoLists.IndexOf(
+                        data.AllTodoLists.TodoLists.Where(l => l.Id == list.Id).FirstOrDefault()
+                        );
+                    data.AllTodoLists.TodoLists[index] = list;
                     return;
                 }
                 if (typeof(T) == typeof(Count))
@@ -150,49 +155,46 @@ namespace MauiTodo.Services
                 Count = new Count { Value = 2 },
                 AllTodoLists = new AllTodoLists
                 {
-                    TodoLists = new Dictionary<int, TodoList>{
-                            {100, new TodoList
-                                {
-                                    Id=100,
-                                    Title = "bluelist",
-                                    Items = new Dictionary<int, TodoItem>{
-
-                                        {1, new TodoItem{
-                                            Id =1,
-                                            Title = $"test{1}"
-                                        } },
-                                        {2, new TodoItem{
-                                            Id =2,
-                                            Title = $"test{2}"
-                                        } },
-                                        {3, new TodoItem{
-                                            Id =3,
-                                            Title = $"test{3}"
-                                        } }
-                                    }
+                    TodoLists = new ObservableCollection<TodoList>{
+                        new TodoList
+                        {
+                            Id=100,
+                            Title = "bluelist",
+                            Items = new ObservableCollection<TodoItem>{
+                                new TodoItem{
+                                    Id =1,
+                                    Title = $"test{1}"
+                                },
+                                new TodoItem{
+                                    Id =2,
+                                    Title = $"test{2}"
+                                },
+                                new TodoItem{
+                                    Id =3,
+                                    Title = $"test{3}"
                                 }
-                            },
-                            {101, new TodoList
-                                {
-                                    Id=101,
-                                    Title = "redlist",
-                                    Items = new Dictionary<int, TodoItem>{
-                                        {4, new TodoItem{
-                                            Id =4,
-                                            Title = $"junk{4}"
-                                        } },
-                                        {5, new TodoItem{
-                                            Id =5,
-                                            Title = $"junk{5}"
-                                        } },
-                                        {6, new TodoItem{
-                                            Id =6,
-                                            Title = $"junk{6}"
-                                        } }
-                                    }
+                            }
+                        },
+                        new TodoList
+                        {
+                            Id=101,
+                            Title = "redlist",
+                            Items = new ObservableCollection<TodoItem>{
+                                new TodoItem{
+                                    Id =4,
+                                    Title = $"junk{4}"
+                                },
+                                new TodoItem{
+                                    Id =5,
+                                    Title = $"junk{5}"
+                                },
+                                new TodoItem{
+                                    Id =6,
+                                    Title = $"junk{6}"
                                 }
                             }
                         }
+                    }
                 }
             };
             await Save();

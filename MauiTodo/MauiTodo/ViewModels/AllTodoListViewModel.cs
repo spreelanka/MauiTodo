@@ -3,6 +3,7 @@ using MauiTodo.Services;
 using MauiTodo.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Web;
+using System.Collections.ObjectModel;
 
 namespace MauiTodo.ViewModels
 {
@@ -16,17 +17,18 @@ namespace MauiTodo.ViewModels
             Count = new Count { Value = 500 },
             AllTodoLists = new AllTodoLists
             {
-                TodoLists = new Dictionary<int, TodoList>{
-                            {5000, new TodoList
+                TodoLists = new ObservableCollection<TodoList>{
+                            new TodoList
                             {
+                                Id=5000,
                                 Title = "defaultlist",
-                                Items = new Dictionary<int, TodoItem>{
-                                    {500, new TodoItem{
+                                Items = new ObservableCollection<TodoItem>{
+                                    new TodoItem{
                                         Id =500,
                                         Title = $"empty{500}"
-                                    } }
+                                    }
                                 }
-                            } }
+                            }
                 }
             }
         };

@@ -44,6 +44,15 @@ namespace MauiTodo.ViewModels
         }
 
         [RelayCommand]
+        async Task DeleteTodoItem(int id)
+        {
+            TodoList.Items.Remove(
+                TodoList.Items.Where(e => e.Id == id).FirstOrDefault()
+            );
+            await dataProvider.Put(TodoList);
+        }
+
+        [RelayCommand]
         async Task GoBack()
         {
             await dataProvider.Put(TodoList);
