@@ -26,13 +26,17 @@ namespace MauiTodo.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            var raw = HttpUtility.UrlDecode(query[nameof(TodoList.Id)].ToString());
-            int id;
-            if (int.TryParse(raw, out id))
-                Task.Run(async () =>
-                {
-                    TodoList = await dataProvider.Get<TodoList>(id);
-                });
+            var idKey = nameof(TodoList.Id);
+            if (query != null && query.ContainsKey(idKey))
+            {
+                var raw = HttpUtility.UrlDecode(query[idKey].ToString());
+                int id;
+                if (int.TryParse(raw, out id))
+                    Task.Run(async () =>
+                    {
+                        TodoList = await dataProvider.Get<TodoList>(id);
+                    });
+            }
         }
 
         [RelayCommand]
