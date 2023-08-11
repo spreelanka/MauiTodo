@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Web;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiTodo.Views;
 
 namespace MauiTodo.ViewModels
 {
@@ -13,6 +14,8 @@ namespace MauiTodo.ViewModels
     {
         IDataProvider dataProvider;
         ILog log;
+        IShellNavigation navigation;
+
         [ObservableProperty]
         Data data = new Data
         {
@@ -35,9 +38,10 @@ namespace MauiTodo.ViewModels
             }
         };
 
-        public AllTodoListViewModel(IDataProvider dataProvider, ILog log)
+        public AllTodoListViewModel(IDataProvider dataProvider, ILog log, IShellNavigation navigation)
         {
             this.log = log;
+            this.navigation = navigation;
             this.dataProvider = dataProvider;
             getData();
         }
@@ -78,6 +82,18 @@ namespace MauiTodo.ViewModels
             await getData();
         }
 
+        public void ListView_ItemSelected(System.Object sender, Microsoft.Maui.Controls.SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem == null)
+                return;
+            if (e.SelectedItem is TodoList list)
+            {
+                (sender as ListView).SelectedItem = null;
+                navigation.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
+                return;
+            }
+            log.Error($"{e.SelectedItem.GetType().Name} not supported", null);
+        }
 
     }
 }
