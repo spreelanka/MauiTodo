@@ -9,33 +9,40 @@
                             />   
     </Shell.BackButtonBehavior>
 
-    <ScrollView>
-        <VerticalStackLayout>
-            <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
-                   VerticalOptions="Center"
-                                HorizontalOptions="Center" />
-            <ListView ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected">
-                <ListView.ItemTemplate >
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding Complete}" />
-
-                                <Entry
-                                    Placeholder="New Item"
-                                    Text="{Binding Title}"
-                                    VerticalOptions="Center"
+    <Grid RowDefinitions="*,64" ColumnDefinitions="*,64">
+        <ScrollView Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <VerticalStackLayout>
+                <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
+                       VerticalOptions="Center"
                                     HorizontalOptions="Center" />
-                                <Button
-                                    Text="X"
-                                    Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
-                                    CommandParameter="{Binding Id}"
-                                    />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </VerticalStackLayout>
-    </ScrollView>
+                <ListView ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected">
+                    <ListView.ItemTemplate >
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding Complete}" />
+
+                                    <Entry
+                                        Placeholder="New Item"
+                                        Text="{Binding Title}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center" />
+                                    <Button
+                                        Text="X"
+                                        Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
+                                        CommandParameter="{Binding Id}"
+                                        />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Grid.Row="1" Grid.Column="1" Text="+"
+                Margin="0,0,16,16"
+                BackgroundColor="DarkCyan"
+                Command="{Binding AddTodoItemCommand}"
+                />
+    </Grid>
 </ContentPage>

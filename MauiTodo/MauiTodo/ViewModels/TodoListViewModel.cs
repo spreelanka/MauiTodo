@@ -59,6 +59,14 @@ namespace MauiTodo.ViewModels
 
             await Shell.Current.GoToAsync("..?qqq=1");
         }
+
+        [RelayCommand]
+        async Task AddTodoItem()
+        {
+            TodoList.Items.Insert(0, new TodoItem { Title = "new item", Id = TodoList.Items.Max(e => e.Id) + 1 });
+            await dataProvider.Put(TodoList);
+            await dataProvider.Save();
+        }
     }
 }
 

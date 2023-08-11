@@ -114,7 +114,7 @@ namespace MauiTodo.Services
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
                 using FileStream InputStream = System.IO.File.OpenRead(targetFile);
                 using StreamReader reader = new StreamReader(InputStream);
-                var result = await reader.ReadToEndAsync();
+                var result = await reader.ReadLineAsync();
                 reader.Close();
                 return result;
             }
@@ -142,7 +142,7 @@ namespace MauiTodo.Services
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
                 using FileStream outputStream = System.IO.File.OpenWrite(targetFile);
                 using StreamWriter streamWriter = new StreamWriter(outputStream);
-                await streamWriter.WriteAsync(raw);
+                await streamWriter.WriteLineAsync(raw);
                 await streamWriter.FlushAsync();
                 streamWriter.Close();
             }

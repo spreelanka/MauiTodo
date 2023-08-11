@@ -20,6 +20,7 @@
             </ListView>
         </ScrollView>
         <Button Grid.Row="1" Grid.Column="1" Text="+"
+                Margin="0,0,16,16"
                 BackgroundColor="DarkCyan"
                 Command="{Binding AddTodoListCommand}"
                 />
