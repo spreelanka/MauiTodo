@@ -41,16 +41,19 @@ public static class MauiProgram
                 // save data when app is backgrounded
                 static bool LeaveEvent()
                 {
-                    var Current =
-#if ANDROID
-                    MauiApplication.Current.Services;
-#elif IOS || MACCATALYST                   
-                    MauiUIApplicationDelegate.Current.Services;
-#endif
 
+#if ANDROID
+                    var Current = MauiApplication.Current.Services;
+#elif IOS || MACCATALYST
+                    var Current = MauiUIApplicationDelegate.Current.Services;
+#endif
+#if IOS || MACCATALYST || ANDROID
                     var dataProvider = Current.GetService<IDataProvider>();
                     dataProvider.Save();
                     return true;
+#else
+                    return false;
+#endif
                 }
             });
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
