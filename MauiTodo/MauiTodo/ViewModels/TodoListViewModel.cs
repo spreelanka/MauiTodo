@@ -13,10 +13,12 @@ namespace MauiTodo.ViewModels
         [ObservableProperty]
         TodoList todoList;
 
-
+        ILog log;
         IDataProvider dataProvider;
-        public TodoListViewModel(IDataProvider dataProvider)
+
+        public TodoListViewModel(IDataProvider dataProvider, ILog log)
         {
+            this.log = log;
             this.dataProvider = dataProvider;
             this.PropertyChanged += TodoListViewModel_PropertyChanged;
         }

@@ -1,11 +1,13 @@
 ﻿using MauiTodo.Models;
+using MauiTodo.Services;
 using MauiTodo.ViewModels;
 
 namespace MauiTodo.Views;
 
 public partial class AllTodoListsPage : ContentPage
 {
-    public AllTodoListsPage(AllTodoListViewModel vm)
+    ILog log;
+    public AllTodoListsPage(AllTodoListViewModel vm, ILog log)
     {
         InitializeComponent();
         BindingContext = vm;
@@ -19,6 +21,8 @@ public partial class AllTodoListsPage : ContentPage
         {
             (sender as ListView).SelectedItem = null;
             Shell.Current.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
+            return;
         }
+        log.Error($"{e.SelectedItem.GetType().Name} not supported", null);
     }
 }

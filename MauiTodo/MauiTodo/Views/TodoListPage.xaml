@@ -24,20 +24,22 @@
                     <ListView.ItemTemplate >
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding Complete}" />
-
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <CheckBox IsChecked="{Binding Complete}"
+                                        Grid.Column="0"/>
                                     <Entry
+                                        Grid.Column="1"
                                         Placeholder="New Item"
                                         Text="{Binding Title}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="Center" />
                                     <Button
+                                        Grid.Column="2"
                                         Text="X"
                                         Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
                                         CommandParameter="{Binding Id}"
                                         />
-                                </StackLayout>
+                                </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>

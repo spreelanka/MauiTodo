@@ -5,6 +5,10 @@ using Newtonsoft.Json;
 
 namespace MauiTodo.Services
 {
+    //placeholder for a more mature persistence strategy:
+    // - hybrid local storage+rest api per business requirements
+    //   - encrypted local storage
+    //   - rest api
     public class DataProvider : IDataProvider
     {
         ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
@@ -116,7 +120,7 @@ namespace MauiTodo.Services
 
         async Task<string> read()
         {
-            //dataLock.EnterReadLock();
+            //dataLock.TryEnterReadLock(50);
             try
             {
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
@@ -138,13 +142,14 @@ namespace MauiTodo.Services
             }
             finally
             {
-                //dataLock.ExitReadLock();
+                //if (dataLock.IsReadLockHeld)
+                //    dataLock.ExitWriteLock();
             }
         }
 
         async Task write(string raw)
         {
-            //dataLock.EnterWriteLock();
+            //dataLock.TryEnterWriteLock(100);
             try
             {
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
@@ -160,7 +165,8 @@ namespace MauiTodo.Services
             }
             finally
             {
-                //dataLock.ExitWriteLock();
+                //if (dataLock.IsWriteLockHeld)
+                //    dataLock.ExitWriteLock();
             }
         }
 

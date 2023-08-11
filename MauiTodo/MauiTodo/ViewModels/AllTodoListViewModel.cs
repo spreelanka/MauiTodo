@@ -12,6 +12,7 @@ namespace MauiTodo.ViewModels
     public partial class AllTodoListViewModel : IQueryAttributable
     {
         IDataProvider dataProvider;
+        ILog log;
         [ObservableProperty]
         Data data = new Data
         {
@@ -22,7 +23,7 @@ namespace MauiTodo.ViewModels
                             new TodoList
                             {
                                 Id=5000,
-                                Title = "defaultlist",
+                                Title = "",
                                 Items = new ObservableCollection<TodoItem>{
                                     new TodoItem{
                                         Id =500,
@@ -34,8 +35,9 @@ namespace MauiTodo.ViewModels
             }
         };
 
-        public AllTodoListViewModel(IDataProvider dataProvider)
+        public AllTodoListViewModel(IDataProvider dataProvider, ILog log)
         {
+            this.log = log;
             this.dataProvider = dataProvider;
             getData();
         }

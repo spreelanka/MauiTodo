@@ -37,6 +37,8 @@ public static class MauiProgram
                         .DidEnterBackground((app) => LeaveEvent())
                         .WillTerminate((app) => LeaveEvent()));
 #endif
+
+                // save data when app is backgrounded
                 static bool LeaveEvent()
                 {
                     var Current =
@@ -52,6 +54,7 @@ public static class MauiProgram
                 }
             });
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
+        builder.Services.AddSingleton<ILog, Log>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddScoped<AllTodoListsPage>();
         builder.Services.AddScoped<AllTodoListViewModel>();
