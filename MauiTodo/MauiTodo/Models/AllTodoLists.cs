@@ -8,7 +8,7 @@ namespace MauiTodo.Models
     public partial class AllTodoLists
     {
         [ObservableProperty]
-        ObservableCollection<TodoList> todoLists;
+        ObservableCollection<TodoList> todoLists = new ObservableCollection<TodoList>();
     }
 }
 

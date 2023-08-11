@@ -73,6 +73,7 @@ namespace MauiTodo.Services
                 if (typeof(T) == typeof(Data))
                 {
                     data = (Data)Convert.ChangeType(value, typeof(Data));
+                    return;
                 }
                 if (typeof(T) == typeof(TodoList))
                 {

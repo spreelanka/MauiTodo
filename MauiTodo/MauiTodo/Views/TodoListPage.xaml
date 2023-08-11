@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:MauiTodo.ViewModels"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
+    <Shell.TitleView>
+        <StackLayout>
+            <Button Text="Delete" Command="{Binding DeleteTodoListCommand}" HeightRequest="50" WidthRequest="50" HorizontalOptions="End"></Button>
+        </StackLayout>
+    </Shell.TitleView>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior Command="{Binding GoBackCommand}" TextOverride="Back  "
                             />   

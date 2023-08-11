@@ -40,17 +40,25 @@ namespace MauiTodo.ViewModels
             getData();
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             getData();
-            //var raw = HttpUtility.UrlDecode(query[nameof(TodoList.Id)].ToString());
-            //int id;
-            //if (int.TryParse(raw, out id))
-            //    Task.Run(async () =>
-            //    {
-            //        TodoList = await dataProvider.Get<TodoList>(id);
-            //        TodoList.PropertyChanged += TodoList_PropertyChanged;
-            //    });
+            if (query.ContainsKey("Delete"))
+            {
+                var deleteIdString = HttpUtility.UrlDecode(query["Delete"].ToString());
+                if (deleteIdString != null)
+                {
+                    int deleteId = 0;
+                    if (int.TryParse(deleteIdString, out deleteId))
+                    {
+                        Data.AllTodoLists.TodoLists.Remove(
+                            Data.AllTodoLists.TodoLists.Where(e => e.Id == deleteId).FirstOrDefault()
+                        );
+                        await dataProvider.Put(Data);
+                        await dataProvider.Save();
+                    }
+                }
+            }
         }
 
         async Task getData()

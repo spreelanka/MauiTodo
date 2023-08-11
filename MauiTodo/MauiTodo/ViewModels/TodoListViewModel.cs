@@ -44,6 +44,12 @@ namespace MauiTodo.ViewModels
         }
 
         [RelayCommand]
+        async Task DeleteTodoList()
+        {
+            await Shell.Current.GoToAsync($"..?Delete={TodoList.Id}");
+        }
+
+        [RelayCommand]
         async Task DeleteTodoItem(int id)
         {
             TodoList.Items.Remove(
@@ -63,7 +69,8 @@ namespace MauiTodo.ViewModels
         [RelayCommand]
         async Task AddTodoItem()
         {
-            TodoList.Items.Insert(0, new TodoItem { Title = "new item", Id = TodoList.Items.Max(e => e.Id) + 1 });
+            var newId = TodoList.Items.Count == 0 ? 1 : TodoList.Items.Max(e => e.Id) + 1;
+            TodoList.Items.Insert(0, new TodoItem { Title = "new item", Id = newId });
             await dataProvider.Put(TodoList);
             await dataProvider.Save();
         }

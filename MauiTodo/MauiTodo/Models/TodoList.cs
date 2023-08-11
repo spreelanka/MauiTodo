@@ -12,7 +12,7 @@ namespace MauiTodo.Models
         [ObservableProperty]
         string title;
         [ObservableProperty]
-        ObservableCollection<TodoItem> items;
+        ObservableCollection<TodoItem> items = new ObservableCollection<TodoItem>();
     }
 }
 
