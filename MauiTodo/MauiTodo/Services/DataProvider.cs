@@ -79,6 +79,13 @@ namespace MauiTodo.Services
                 {
                     var list = (TodoList)Convert.ChangeType(value, typeof(TodoList));
 
+                    if (data.AllTodoLists.TodoLists.Count == 0)
+                    {
+                        list.Id = 1;
+                        data.AllTodoLists.TodoLists.Insert(0, list);
+                        return;
+                    }
+
                     var index = data.AllTodoLists.TodoLists.IndexOf(
                         data.AllTodoLists.TodoLists.Where(l => l.Id == list.Id).FirstOrDefault()
                         );
@@ -161,48 +168,11 @@ namespace MauiTodo.Services
         {
             data = new Data
             {
-                Count = new Count { Value = 2 },
+                Count = new Count { Value = 0 },
                 AllTodoLists = new AllTodoLists
                 {
-                    TodoLists = new ObservableCollection<TodoList>{
-                        new TodoList
-                        {
-                            Id=100,
-                            Title = "bluelist",
-                            Items = new ObservableCollection<TodoItem>{
-                                new TodoItem{
-                                    Id =1,
-                                    Title = $"test{1}"
-                                },
-                                new TodoItem{
-                                    Id =2,
-                                    Title = $"test{2}"
-                                },
-                                new TodoItem{
-                                    Id =3,
-                                    Title = $"test{3}"
-                                }
-                            }
-                        },
-                        new TodoList
-                        {
-                            Id=101,
-                            Title = "redlist",
-                            Items = new ObservableCollection<TodoItem>{
-                                new TodoItem{
-                                    Id =4,
-                                    Title = $"junk{4}"
-                                },
-                                new TodoItem{
-                                    Id =5,
-                                    Title = $"junk{5}"
-                                },
-                                new TodoItem{
-                                    Id =6,
-                                    Title = $"junk{6}"
-                                }
-                            }
-                        }
+                    TodoLists = new ObservableCollection<TodoList>
+                    {
                     }
                 }
             };

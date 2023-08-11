@@ -2,7 +2,6 @@
 using System.Web;
 using MauiTodo.Models;
 using MauiTodo.Services;
-//using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -63,14 +62,14 @@ namespace MauiTodo.ViewModels
         {
             await dataProvider.Put(TodoList);
 
-            await Shell.Current.GoToAsync("..?qqq=1");
+            await Shell.Current.GoToAsync("..?q=1");
         }
 
         [RelayCommand]
         async Task AddTodoItem()
         {
             var newId = TodoList.Items.Count == 0 ? 1 : TodoList.Items.Max(e => e.Id) + 1;
-            TodoList.Items.Insert(0, new TodoItem { Title = "new item", Id = newId });
+            TodoList.Items.Insert(0, new TodoItem { Id = newId });
             await dataProvider.Put(TodoList);
             await dataProvider.Save();
         }
