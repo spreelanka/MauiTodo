@@ -7,10 +7,13 @@ namespace MauiTodo.Views;
 public partial class AllTodoListsPage : ContentPage
 {
     ILog log;
-    public AllTodoListsPage(AllTodoListViewModel vm, ILog log)
+    IShellNavigation navigation;
+    public AllTodoListsPage(AllTodoListViewModel vm, ILog log, IShellNavigation navigation)
     {
         InitializeComponent();
         BindingContext = vm;
+        this.log = log;
+        this.navigation = navigation;
     }
 
     void ListView_ItemSelected(System.Object sender, Microsoft.Maui.Controls.SelectedItemChangedEventArgs e)
@@ -20,7 +23,7 @@ public partial class AllTodoListsPage : ContentPage
         if (e.SelectedItem is TodoList list)
         {
             (sender as ListView).SelectedItem = null;
-            Shell.Current.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
+            navigation.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
             return;
         }
         log.Error($"{e.SelectedItem.GetType().Name} not supported", null);

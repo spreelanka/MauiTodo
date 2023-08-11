@@ -15,17 +15,13 @@ namespace MauiTodo.ViewModels
 
         ILog log;
         IDataProvider dataProvider;
+        IShellNavigation navigation;
 
-        public TodoListViewModel(IDataProvider dataProvider, ILog log)
+        public TodoListViewModel(IDataProvider dataProvider, ILog log, IShellNavigation navigation)
         {
             this.log = log;
             this.dataProvider = dataProvider;
-            this.PropertyChanged += TodoListViewModel_PropertyChanged;
-        }
-
-        private void TodoListViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //dataProvider.Put(TodoList);
+            this.navigation = navigation;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -36,18 +32,13 @@ namespace MauiTodo.ViewModels
                 Task.Run(async () =>
                 {
                     TodoList = await dataProvider.Get<TodoList>(id);
-                    TodoList.PropertyChanged += TodoList_PropertyChanged;
                 });
-        }
-
-        private void TodoList_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
         }
 
         [RelayCommand]
         async Task DeleteTodoList()
         {
-            await Shell.Current.GoToAsync($"..?Delete={TodoList.Id}");
+            await navigation.GoToAsync($"..?Delete={TodoList.Id}");
         }
 
         [RelayCommand]
@@ -64,7 +55,7 @@ namespace MauiTodo.ViewModels
         {
             await dataProvider.Put(TodoList);
 
-            await Shell.Current.GoToAsync("..?q=1");
+            await navigation.GoToAsync("..?q=1");
         }
 
         [RelayCommand]
