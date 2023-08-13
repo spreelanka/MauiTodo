@@ -7,12 +7,12 @@
     xmlns:local="clr-namespace:MauiTodo.Views"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
+    <!--<ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate localroot:MainPage}"
-        Route="MainPage" />
+        Route="MainPage" />-->
     <ShellContent
-        Title="Todo Lists"
+        Title="All Todo Lists"
         ContentTemplate="{DataTemplate local:AllTodoListsPage}"
         Route="AllTodoListsPage" />
     <ShellContent

@@ -1,6 +1,7 @@
 ﻿using System;
 namespace MauiTodo.Services
 {
+
     public interface IDataProvider
     {
         Task Save();

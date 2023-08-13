@@ -1,4 +1,5 @@
-﻿using MauiTodo.Services;
+﻿using Maui.FixesAndWorkarounds;
+using MauiTodo.Services;
 using MauiTodo.ViewModels;
 using MauiTodo.Views;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("materialsymbols.ttf", "materialsymbols");
             })
             .ConfigureLifecycleEvents(events =>
             {
@@ -37,26 +39,35 @@ public static class MauiProgram
                         .DidEnterBackground((app) => LeaveEvent())
                         .WillTerminate((app) => LeaveEvent()));
 #endif
+
+                // save data when app is backgrounded
                 static bool LeaveEvent()
                 {
-                    var Current =
-#if ANDROID
-                    MauiApplication.Current.Services;
-#elif IOS || MACCATALYST                   
-                    MauiUIApplicationDelegate.Current.Services;
-#endif
 
+#if ANDROID
+                    var Current = MauiApplication.Current.Services;
+#elif IOS || MACCATALYST
+                    var Current = MauiUIApplicationDelegate.Current.Services;
+#endif
+#if IOS || MACCATALYST || ANDROID
                     var dataProvider = Current.GetService<IDataProvider>();
                     dataProvider.Save();
                     return true;
+#else
+                    return false;
+#endif
                 }
             });
+        builder.ConfigureMauiWorkarounds();
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
-        builder.Services.AddTransient<MainPage>();
-        builder.Services.AddScoped<AllTodoListsPage>();
-        builder.Services.AddScoped<AllTodoListViewModel>();
-        builder.Services.AddScoped<TodoListPage>();
-        builder.Services.AddScoped<TodoListViewModel>();
+        builder.Services.AddSingleton<ILog, Log>();
+        //builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<IDialogService, DialogService>();
+        builder.Services.AddTransient<IShellNavigation, ShellNavigation>();
+        builder.Services.AddTransient<AllTodoListsPage>();
+        builder.Services.AddTransient<AllTodoListViewModel>();
+        builder.Services.AddTransient<TodoListPage>();
+        builder.Services.AddTransient<TodoListViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

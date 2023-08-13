@@ -2,22 +2,29 @@
 
 # features
 ## persist data
-- all data
+- [x] all data
 ## view all TodoLists
-- list of TodoLists
-- tap to edit TodoList
-- action Create new TodoList
+- [x] list of TodoLists
+- [x] tap to edit TodoList
+- [x] action Create new TodoList
 ## edit TodoList
-- Title
-- action Delete
-- action Mark Item Complete
+- [x] Title
+- [x] action Delete
+- [x] action Mark Item Complete
 ## edit todolist item
-- Title
-- Complete
-- action Delete
+- [x] Title
+- [x] Complete
+- [x] action Delete
+
+# other
+- [x] unit tests
+- [x] ios cleanup
+- [x] theme design theme
+
 # suggested bonus
 ## design
-- use materialdesign light and dark theme
+- [x] use materialdesign light and dark theme
 # propose future features
-- sort list of TodoLists
-- sort a TodoList by complete state
+- [ ] sqlite
+- [ ] sort list of TodoLists
+- [ ] sort a TodoList by complete state

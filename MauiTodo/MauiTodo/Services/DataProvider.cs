@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using MauiTodo.Models;
 using Newtonsoft.Json;
 
 namespace MauiTodo.Services
 {
+    //placeholder for a more mature persistence strategy:
+    // - hybrid local storage+rest api per business requirements
+    //   - encrypted local storage
+    //   - rest api
     public class DataProvider : IDataProvider
     {
         ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
@@ -43,7 +48,7 @@ namespace MauiTodo.Services
                 await loaded.Task;
                 if (typeof(T) == typeof(TodoList))
                 {
-                    var result = data.AllTodoLists.TodoLists.GetValueOrDefault(id);
+                    var result = data.AllTodoLists.TodoLists.Where(l => l.Id == id).FirstOrDefault();
                     return (T)Convert.ChangeType(result, typeof(T));
                 }
                 if (typeof(T) == typeof(Count))
@@ -72,11 +77,31 @@ namespace MauiTodo.Services
                 if (typeof(T) == typeof(Data))
                 {
                     data = (Data)Convert.ChangeType(value, typeof(Data));
+                    return;
                 }
                 if (typeof(T) == typeof(TodoList))
                 {
                     var list = (TodoList)Convert.ChangeType(value, typeof(TodoList));
-                    data.AllTodoLists.TodoLists[list.Id] = list;
+
+                    if (data.AllTodoLists.TodoLists.Count == 0)
+                    {
+                        list.Id = 1;
+                        data.AllTodoLists.TodoLists.Insert(0, list);
+                        return;
+                    }
+
+                    var index = data.AllTodoLists.TodoLists.IndexOf(
+                        data.AllTodoLists.TodoLists.Where(l => l.Id == list.Id).FirstOrDefault()
+                        );
+                    if (index != -1)
+                    {
+                        data.AllTodoLists.TodoLists[index] = list;
+                    }
+                    else
+                    {
+                        list.Id = data.AllTodoLists.TodoLists.Max(e => e.Id) + 1;
+                        data.AllTodoLists.TodoLists.Insert(0, list);
+                    }
                     return;
                 }
                 if (typeof(T) == typeof(Count))
@@ -95,13 +120,13 @@ namespace MauiTodo.Services
 
         async Task<string> read()
         {
-            //dataLock.EnterReadLock();
+            //dataLock.TryEnterReadLock(50);
             try
             {
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
                 using FileStream InputStream = System.IO.File.OpenRead(targetFile);
                 using StreamReader reader = new StreamReader(InputStream);
-                var result = await reader.ReadToEndAsync();
+                var result = await reader.ReadLineAsync();
                 reader.Close();
                 return result;
             }
@@ -117,19 +142,20 @@ namespace MauiTodo.Services
             }
             finally
             {
-                //dataLock.ExitReadLock();
+                //if (dataLock.IsReadLockHeld)
+                //    dataLock.ExitWriteLock();
             }
         }
 
         async Task write(string raw)
         {
-            //dataLock.EnterWriteLock();
+            //dataLock.TryEnterWriteLock(100);
             try
             {
                 string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "data.json");
                 using FileStream outputStream = System.IO.File.OpenWrite(targetFile);
                 using StreamWriter streamWriter = new StreamWriter(outputStream);
-                await streamWriter.WriteAsync(raw);
+                await streamWriter.WriteLineAsync(raw);
                 await streamWriter.FlushAsync();
                 streamWriter.Close();
             }
@@ -139,7 +165,8 @@ namespace MauiTodo.Services
             }
             finally
             {
-                //dataLock.ExitWriteLock();
+                //if (dataLock.IsWriteLockHeld)
+                //    dataLock.ExitWriteLock();
             }
         }
 
@@ -147,52 +174,12 @@ namespace MauiTodo.Services
         {
             data = new Data
             {
-                Count = new Count { Value = 2 },
+                Count = new Count { Value = 0 },
                 AllTodoLists = new AllTodoLists
                 {
-                    TodoLists = new Dictionary<int, TodoList>{
-                            {100, new TodoList
-                                {
-                                    Id=100,
-                                    Title = "bluelist",
-                                    Items = new Dictionary<int, TodoItem>{
-
-                                        {1, new TodoItem{
-                                            Id =1,
-                                            Title = $"test{1}"
-                                        } },
-                                        {2, new TodoItem{
-                                            Id =2,
-                                            Title = $"test{2}"
-                                        } },
-                                        {3, new TodoItem{
-                                            Id =3,
-                                            Title = $"test{3}"
-                                        } }
-                                    }
-                                }
-                            },
-                            {101, new TodoList
-                                {
-                                    Id=101,
-                                    Title = "redlist",
-                                    Items = new Dictionary<int, TodoItem>{
-                                        {4, new TodoItem{
-                                            Id =4,
-                                            Title = $"junk{4}"
-                                        } },
-                                        {5, new TodoItem{
-                                            Id =5,
-                                            Title = $"junk{5}"
-                                        } },
-                                        {6, new TodoItem{
-                                            Id =6,
-                                            Title = $"junk{6}"
-                                        } }
-                                    }
-                                }
-                            }
-                        }
+                    TodoLists = new ObservableCollection<TodoList>
+                    {
+                    }
                 }
             };
             await Save();
