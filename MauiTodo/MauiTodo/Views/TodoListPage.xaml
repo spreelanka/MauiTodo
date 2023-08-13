@@ -14,13 +14,13 @@
                             />   
     </Shell.BackButtonBehavior>
 
-    <Grid RowDefinitions="*,64" ColumnDefinitions="*,64" Background="purple" VerticalOptions="FillAndExpand">
-        <ScrollView Grid.RowSpan="2" Grid.ColumnSpan="2" Background="orange" VerticalOptions="FillAndExpand">
-            <Grid RowDefinitions="90,*" Background="pink" VerticalOptions="FillAndExpand">
-                <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
-                       Background="blue"
-                       VerticalOptions="Start"
-                                    HorizontalOptions="CenterAndExpand" />
+    <Grid RowDefinitions="*,64" ColumnDefinitions="*,64" Background="purple" VerticalOptions="Fill">
+        <ScrollView Grid.RowSpan="2" Grid.ColumnSpan="2" Background="orange" VerticalOptions="Fill">
+            <Grid RowDefinitions="60,*" Background="pink" VerticalOptions="Fill">
+                <Grid>
+                    <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
+                           Margin="10"/>
+                </Grid>
                 <ListView Grid.Row="1" ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected" RowHeight="60" Background="tan" VerticalOptions="Fill">
                     <ListView.ItemTemplate >
                         <DataTemplate>

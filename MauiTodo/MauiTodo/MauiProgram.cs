@@ -59,11 +59,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
         builder.Services.AddSingleton<ILog, Log>();
         //builder.Services.AddTransient<MainPage>();
-        builder.Services.AddScoped<IShellNavigation, ShellNavigation>();
-        builder.Services.AddScoped<AllTodoListsPage>();
-        builder.Services.AddScoped<AllTodoListViewModel>();
-        builder.Services.AddScoped<TodoListPage>();
-        builder.Services.AddScoped<TodoListViewModel>();
+        builder.Services.AddTransient<IShellNavigation, ShellNavigation>();
+        builder.Services.AddTransient<AllTodoListsPage>();
+        builder.Services.AddTransient<AllTodoListViewModel>();
+        builder.Services.AddTransient<TodoListPage>();
+        builder.Services.AddTransient<TodoListViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
