@@ -1,38 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiTodo.ViewModels"
+             xmlns:material="clr-namespace:MauiIcons.Material;assembly=MauiIcons.Material"
+             xmlns:converters="clr-namespace:MauiTodo.Converters"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
+    <Shell.TitleView >
+        <VerticalStackLayout>
+            <ImageButton Grid.Column="1" 
+                    Command="{Binding DeleteTodoListCommand}" HeightRequest="40" WidthRequest="40" VerticalOptions="Center" HorizontalOptions="End" >
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
+                                     Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
+                                        FontFamily="materialsymbols"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </VerticalStackLayout>
+    </Shell.TitleView>
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior Command="{Binding GoBackCommand}" TextOverride="Back  "
-                            />   
-                            <!--IconOverride="back.png"-->
+        <BackButtonBehavior Command="{Binding GoBackCommand}" />
     </Shell.BackButtonBehavior>
 
-    <ScrollView>
-        <VerticalStackLayout>
-            <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
-                   VerticalOptions="Center"
-                                HorizontalOptions="Center" />
-            <ListView ItemsSource="{Binding TodoList.Items.Values}" ItemSelected="ListView_ItemSelected">
-                <ListView.ItemTemplate >
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding Complete}" />
-
-                                <Entry
-                                    Placeholder="New Item"
-                                    Text="{Binding Title}"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center" />
-                                <Button
-                                    Text="X" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid RowDefinitions="*,64" ColumnDefinitions="*,64" VerticalOptions="Fill">
+        <ScrollView Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalOptions="Fill">
+            <Grid RowDefinitions="60,*" VerticalOptions="Fill">
+                <Grid>
+                    <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
+                           Margin="10"/>
+                </Grid>
+                <ListView Grid.Row="1" ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected" RowHeight="60" VerticalOptions="Fill">
+                    <ListView.ItemTemplate >
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center" Margin="10">
+                                    <CheckBox IsChecked="{Binding Complete}"
+                                        Grid.Column="0"/>
+                                    <Entry
+                                        Grid.Column="1"
+                                        Placeholder="New Item"
+                                        Text="{Binding Title}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Fill" />
+                                    <ImageButton Grid.Column="2" 
+                                        HeightRequest="30" WidthRequest="30" VerticalOptions="Center" HorizontalOptions="End"
+                                        Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
+                                        CommandParameter="{Binding Id}">
+                                        <ImageButton.Source>
+                                            <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
+                                                Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
+                                                FontFamily="materialsymbols"/>
+                                        </ImageButton.Source>
+                                    </ImageButton>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </ScrollView>
+        <ImageButton
+            Grid.Row="1" Grid.Column="1"
+            Margin="0,0,16,16"
+                Command="{Binding AddTodoItemCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static converters:IconFont.Add}"
+                                 Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
+                                    FontFamily="materialsymbols" />
+            </ImageButton.Source>
+        </ImageButton>
+    </Grid>
 </ContentPage>

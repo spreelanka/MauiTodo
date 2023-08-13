@@ -9,10 +9,11 @@ public partial class MainPage : ContentPage
 {
     int count = 0;
     IDataProvider dataProvider;
-
-    public MainPage(IDataProvider dataProvider)
+    IShellNavigation navigation;
+    public MainPage(IDataProvider dataProvider, IShellNavigation navigation)
     {
         this.dataProvider = dataProvider;
+        this.navigation = navigation;
         InitializeComponent();
         Task.Run(async () =>
         {
@@ -35,7 +36,7 @@ public partial class MainPage : ContentPage
 
     private void OnCounterClicked(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync("//AllTodoListsPage");
+        navigation.GoToAsync("//AllTodoListsPage");
         count++;
         dataProvider.Put<Count>(new Count { Value = count });
         updateText();
