@@ -394,6 +394,48 @@ namespace MauiTodoUnitTest
             dataProviderMoq.Verify(e => e.Save(), Times.Once);
         }
 
+        [Test]
+        public async Task AddTodoItem_EmptyList()
+        {
+            var expectedTodoItem = new TodoItem { Id = 1 };
+
+            var todoListBefore = new TodoList
+            {
+                Id = 1,
+                Title = "test list",
+                Items = new ObservableCollection<TodoItem>()
+            };
+
+            var todoListExpectedAfterSerialized = JsonConvert.SerializeObject(new TodoList
+            {
+                Id = 1,
+                Title = "test list",
+                Items = new ObservableCollection<TodoItem>
+                {
+                    expectedTodoItem
+                }
+            });
+
+            dataProviderMoq = new Mock<IDataProvider>();
+            dataProviderMoq.Setup(c => c.Put<TodoList>(It.IsAny<TodoList>()))
+                .Returns((Func<TodoList, Task>)(async (todoList) =>
+                {
+                    Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(todoList));
+                }))
+                .Verifiable();
+
+            dataProviderMoq.Setup(c => c.Save())
+                .Verifiable();
+
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject.TodoList = todoListBefore;
+            await subject.AddTodoItemCommand.ExecuteAsync("");
+            Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));
+
+            dataProviderMoq.Verify(e => e.Put<TodoList>(It.IsAny<TodoList>()), Times.Once);
+            dataProviderMoq.Verify(e => e.Save(), Times.Once);
+        }
+
     }
 }
 

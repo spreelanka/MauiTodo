@@ -46,24 +46,36 @@ namespace MauiTodo.ViewModels
             getData();
         }
 
-        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            getData();
-            if (query.ContainsKey("Delete"))
+            var deleteKey = "Delete";
+            if (query != null && query.ContainsKey(deleteKey))
             {
-                var deleteIdString = HttpUtility.UrlDecode(query["Delete"].ToString());
-                if (deleteIdString != null)
+                object deleteValue;
+                if (query[deleteKey] != null && query.TryGetValue(deleteKey, out deleteValue))
                 {
-                    int deleteId = 0;
-                    if (int.TryParse(deleteIdString, out deleteId))
+                    var deleteIdString = HttpUtility.UrlDecode(deleteValue.ToString());
+                    if (deleteIdString != null)
                     {
-                        Data.AllTodoLists.TodoLists.Remove(
-                            Data.AllTodoLists.TodoLists.Where(e => e.Id == deleteId).FirstOrDefault()
-                        );
-                        await dataProvider.Put(Data);
-                        await dataProvider.Save();
+                        int deleteId = 0;
+                        if (int.TryParse(deleteIdString, out deleteId))
+                        {
+                            Task.Run(async () =>
+                            {
+                                await getData();
+                                var listToDelete = Data.AllTodoLists.TodoLists.Where(e => e.Id == deleteId).FirstOrDefault();
+                                if (listToDelete != null)
+                                {
+                                    Data.AllTodoLists.TodoLists.Remove(listToDelete);
+                                    await dataProvider.Put(Data);
+                                    await dataProvider.Save();
+                                }
+                            });
+                            return;
+                        }
                     }
                 }
+                throw new ArgumentException("query parameter Delete value invalid");
             }
         }
 
@@ -88,13 +100,13 @@ namespace MauiTodo.ViewModels
                 return;
             if (e.SelectedItem is TodoList list)
             {
-                (sender as ListView).SelectedItem = null;
+                if (sender != null && sender is ListView listview)
+                    listview.SelectedItem = null;
                 navigation.GoToAsync($"/{nameof(TodoListPage)}?{nameof(TodoList.Id)}={list.Id}");
                 return;
             }
             log.Error($"{e.SelectedItem.GetType().Name} not supported", null);
         }
-
     }
 }
 
