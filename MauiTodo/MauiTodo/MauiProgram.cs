@@ -1,4 +1,5 @@
-﻿using MauiTodo.Services;
+﻿using MauiIcons.Material;
+using MauiTodo.Services;
 using MauiTodo.ViewModels;
 using MauiTodo.Views;
 using Microsoft.Extensions.Logging;
@@ -13,10 +14,12 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMaterialMauiIcons()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("materialsymbols.ttf", "materialsymbols");
             })
             .ConfigureLifecycleEvents(events =>
             {
@@ -59,6 +62,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
         builder.Services.AddSingleton<ILog, Log>();
         //builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<IDialogService, DialogService>();
         builder.Services.AddTransient<IShellNavigation, ShellNavigation>();
         builder.Services.AddTransient<AllTodoListsPage>();
         builder.Services.AddTransient<AllTodoListViewModel>();

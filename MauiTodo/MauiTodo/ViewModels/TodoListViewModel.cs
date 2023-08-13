@@ -16,12 +16,14 @@ namespace MauiTodo.ViewModels
         ILog log;
         IDataProvider dataProvider;
         IShellNavigation navigation;
+        IDialogService dialogService;
 
-        public TodoListViewModel(IDataProvider dataProvider, ILog log, IShellNavigation navigation)
+        public TodoListViewModel(IDataProvider dataProvider, ILog log, IShellNavigation navigation, IDialogService dialogService)
         {
             this.log = log;
             this.dataProvider = dataProvider;
             this.navigation = navigation;
+            this.dialogService = dialogService;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -47,16 +49,22 @@ namespace MauiTodo.ViewModels
         [RelayCommand]
         async Task DeleteTodoList()
         {
-            await navigation.GoToAsync($"..?Delete={TodoList.Id}");
+            if (await dialogService.DisplayAlert($"Delete TodoList {TodoList.Title}", "", "Yes", "No"))
+            {
+                await navigation.GoToAsync($"..?Delete={TodoList.Id}");
+            }
         }
 
         [RelayCommand]
         async Task DeleteTodoItem(int id)
         {
-            TodoList.Items.Remove(
-                TodoList.Items.Where(e => e.Id == id).FirstOrDefault()
-            );
-            await dataProvider.Put(TodoList);
+            if (await dialogService.DisplayAlert("Delete Item", "", "Yes", "No"))
+            {
+                TodoList.Items.Remove(
+                    TodoList.Items.Where(e => e.Id == id).FirstOrDefault()
+                );
+                await dataProvider.Put(TodoList);
+            }
         }
 
         [RelayCommand]

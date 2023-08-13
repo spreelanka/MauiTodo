@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0</TargetFrameworks>
@@ -50,11 +50,19 @@
 		<None Remove="ViewModels\" />
 		<None Remove="Services\" />
 		<None Remove="Views\" />
+		<None Remove="Converters\" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Models\" />
 		<Folder Include="ViewModels\" />
 		<Folder Include="Services\" />
 		<Folder Include="Views\" />
+		<Folder Include="Converters\" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+	  <PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="1.2.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
+	  <PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="1.2.0" />
 	</ItemGroup>
 </Project>
