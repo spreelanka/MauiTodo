@@ -44,6 +44,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="PureWeen.Maui.FixesAndWorkarounds" Version="1.4.9" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Models\" />
@@ -58,9 +59,6 @@
 		<Folder Include="Services\" />
 		<Folder Include="Views\" />
 		<Folder Include="Converters\" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
-	  <PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="1.2.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
 	  <PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="1.2.0" />

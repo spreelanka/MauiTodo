@@ -14,6 +14,7 @@ namespace MauiTodoUnitTest
         Mock<ILog> logMoq;
         Mock<IDataProvider> dataProviderMoq;
         Mock<IShellNavigation> navigationMoq;
+        Mock<IDialogService> dialogServiceMoq;
 
 
         Task<TodoList> Get_MockResponse(int id, int size = 1)
@@ -41,6 +42,7 @@ namespace MauiTodoUnitTest
             logMoq = new Mock<ILog>();
             dataProviderMoq = new Mock<IDataProvider>();
             navigationMoq = new Mock<IShellNavigation>();
+            dialogServiceMoq = new Mock<IDialogService>();
             dataProviderMoq.Setup(c => c.Get<TodoList>(It.IsAny<int>()))
                 .Returns((int id) => Get_MockResponse(id, 3))
                 .Verifiable();
@@ -49,7 +51,15 @@ namespace MauiTodoUnitTest
                 .Returns(() => Task.CompletedTask)
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            dialogServiceMoq = new Mock<IDialogService>();
+            dialogServiceMoq.Setup(c => c.DisplayAlert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((Func<string, string, string, string, Task<bool>>)((t, m, a, c) =>
+                {
+                    return Task.FromResult(true);
+                }))
+                .Verifiable();
+
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
 
         }
 
@@ -102,7 +112,7 @@ namespace MauiTodoUnitTest
                 .Verifiable();
 
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
 
             var todoListActualTcs = new TaskCompletionSource<TodoList>();
             subject.PropertyChanged += (object? sender, System.ComponentModel.PropertyChangedEventArgs e) =>
@@ -115,6 +125,38 @@ namespace MauiTodoUnitTest
             dataProviderMoq.Verify(e => e.Get<TodoList>(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(await expected, subject.TodoList);
         }
+
+        [Test]
+        public async Task DeleteTodoList_ValidId_DialogCancelled()
+        {
+            var id = 1;
+            var q = new Dictionary<string, object>
+            {
+                {nameof(TodoList.Id), id }
+            };
+
+            navigationMoq = new Mock<IShellNavigation>();
+            navigationMoq.Setup(c => c.GoToAsync(It.IsAny<ShellNavigationState>()))
+                .Returns((Func<ShellNavigationState, Task>)(async (state) =>
+                {
+
+                }))
+                .Verifiable();
+
+            dialogServiceMoq = new Mock<IDialogService>();
+            dialogServiceMoq.Setup(c => c.DisplayAlert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((Func<string, string, string, string, Task<bool>>)((t, m, a, c) =>
+                {
+                    return Task.FromResult(false);
+                }))
+                .Verifiable();
+
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
+            subject.TodoList = await Get_MockResponse(1);
+            await subject.DeleteTodoListCommand.ExecuteAsync("");
+            navigationMoq.Verify(e => e.GoToAsync(It.IsAny<ShellNavigationState>()), Times.Never);
+        }
+
 
         [Test]
         public async Task DeleteTodoList_ValidId()
@@ -134,7 +176,7 @@ namespace MauiTodoUnitTest
                 }))
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = await Get_MockResponse(1);
             await subject.DeleteTodoListCommand.ExecuteAsync("");
             navigationMoq.Verify(e => e.GoToAsync(It.IsAny<ShellNavigationState>()), Times.Once);
@@ -156,7 +198,7 @@ namespace MauiTodoUnitTest
                 }))
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = null;
             Assert.ThrowsAsync<NullReferenceException>(() => subject.DeleteTodoListCommand.ExecuteAsync(""));
             navigationMoq.Verify(e => e.GoToAsync(It.IsAny<ShellNavigationState>()), Times.Never);
@@ -218,7 +260,7 @@ namespace MauiTodoUnitTest
                 }))
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = todoListBefore;
             await subject.DeleteTodoItemCommand.ExecuteAsync(todoItemId);
             Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));
@@ -227,7 +269,7 @@ namespace MauiTodoUnitTest
         }
 
         [Test]
-        public async Task DeleteTodoItem_First()
+        public async Task DeleteTodoItem_FirstDeleteSuccessfully()
         {
             var todoItemId = 1;
 
@@ -282,12 +324,75 @@ namespace MauiTodoUnitTest
                 }))
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            dialogServiceMoq = new Mock<IDialogService>();
+            dialogServiceMoq.Setup(c => c.DisplayAlert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((Func<string, string, string, string, Task<bool>>)((t, m, a, c) =>
+                {
+                    return Task.FromResult(true);
+                }))
+                .Verifiable();
+
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = todoListBefore;
             await subject.DeleteTodoItemCommand.ExecuteAsync(todoItemId);
             Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));
 
             dataProviderMoq.Verify(e => e.Put<TodoList>(It.IsAny<TodoList>()), Times.Once);
+        }
+
+        [Test]
+        public async Task DeleteTodoItem_FirstDeleteCancelled()
+        {
+            var todoItemId = 1;
+
+            var todoListBefore = new TodoList
+            {
+                Id = 1,
+                Title = "test list",
+                Items = new ObservableCollection<TodoItem>
+                {
+                    new TodoItem
+                    {
+                        Id = todoItemId,
+                        Title = $"item1"
+                    },
+                    new TodoItem
+                    {
+                        Id = 333,
+                        Title = $"item2"
+                    },
+                        new TodoItem
+                    {
+                        Id = 222,
+                        Title = $"item3"
+                    }
+                }
+            };
+
+            var todoListExpectedAfterSerialized = JsonConvert.SerializeObject(todoListBefore);
+
+            dataProviderMoq = new Mock<IDataProvider>();
+            dataProviderMoq.Setup(c => c.Put<TodoList>(It.IsAny<TodoList>()))
+                .Returns((Func<TodoList, Task>)(async (todoList) =>
+                {
+                    Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(todoList));
+                }))
+                .Verifiable();
+
+            dialogServiceMoq = new Mock<IDialogService>();
+            dialogServiceMoq.Setup(c => c.DisplayAlert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((Func<string, string, string, string, Task<bool>>)((t, m, a, c) =>
+                {
+                    return Task.FromResult(false);
+                }))
+                .Verifiable();
+
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
+            subject.TodoList = todoListBefore;
+            await subject.DeleteTodoItemCommand.ExecuteAsync(todoItemId);
+            Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));
+
+            dataProviderMoq.Verify(e => e.Put<TodoList>(It.IsAny<TodoList>()), Times.Never);
         }
 
         [Test]
@@ -312,7 +417,7 @@ namespace MauiTodoUnitTest
                 }))
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = expectedTodoList;
             await subject.GoBackCommand.ExecuteAsync("");
 
@@ -385,7 +490,7 @@ namespace MauiTodoUnitTest
             dataProviderMoq.Setup(c => c.Save())
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = todoListBefore;
             await subject.AddTodoItemCommand.ExecuteAsync("");
             Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));
@@ -427,7 +532,7 @@ namespace MauiTodoUnitTest
             dataProviderMoq.Setup(c => c.Save())
                 .Verifiable();
 
-            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object);
+            subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
             subject.TodoList = todoListBefore;
             await subject.AddTodoItemCommand.ExecuteAsync("");
             Assert.AreEqual(todoListExpectedAfterSerialized, JsonConvert.SerializeObject(subject.TodoList));

@@ -1,4 +1,4 @@
-﻿using MauiIcons.Material;
+﻿using Maui.FixesAndWorkarounds;
 using MauiTodo.Services;
 using MauiTodo.ViewModels;
 using MauiTodo.Views;
@@ -14,7 +14,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMaterialMauiIcons()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -59,6 +58,7 @@ public static class MauiProgram
 #endif
                 }
             });
+        builder.ConfigureMauiWorkarounds();
         builder.Services.AddSingleton<IDataProvider, DataProvider>();
         builder.Services.AddSingleton<ILog, Log>();
         //builder.Services.AddTransient<MainPage>();

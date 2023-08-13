@@ -6,19 +6,20 @@
              xmlns:converters="clr-namespace:MauiTodo.Converters"
              x:Class="MauiTodo.Views.TodoListPage"
              Title="TodoListPage">
-    <Shell.TitleView>
-        <ImageButton
-                Command="{Binding DeleteTodoListCommand}" HeightRequest="50" WidthRequest="50" HorizontalOptions="End" >
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
-                                 Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
-                                    FontFamily="materialsymbols" />
-            </ImageButton.Source>
-        </ImageButton>
+    <Shell.TitleView >
+        <VerticalStackLayout>
+            <ImageButton Grid.Column="1" 
+                    Command="{Binding DeleteTodoListCommand}" HeightRequest="20" WidthRequest="20" VerticalOptions="Center" HorizontalOptions="End" >
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
+                                     Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
+                                        FontFamily="materialsymbols"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </VerticalStackLayout>
     </Shell.TitleView>
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior Command="{Binding GoBackCommand}" TextOverride="Back"
-                            />   
+        <BackButtonBehavior Command="{Binding GoBackCommand}" />
     </Shell.BackButtonBehavior>
 
     <Grid RowDefinitions="*,64" ColumnDefinitions="*,64" VerticalOptions="Fill">
@@ -41,12 +42,16 @@
                                         Text="{Binding Title}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="Fill" />
-                                    <Button
-                                        Grid.Column="2"
-                                        Text="X"
+                                    <ImageButton Grid.Column="2" 
+                                        HeightRequest="20" WidthRequest="20" VerticalOptions="Center" HorizontalOptions="End"
                                         Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
-                                        CommandParameter="{Binding Id}"
-                                        />
+                                        CommandParameter="{Binding Id}">
+                                        <ImageButton.Source>
+                                            <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
+                                                Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
+                                                FontFamily="materialsymbols"/>
+                                        </ImageButton.Source>
+                                    </ImageButton>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
