@@ -15,7 +15,7 @@ a little dotnet MAUI todolist app with
 |  | |
 | -- | -- |
 |![](docs/example1.gif) |![](docs/example2.gif) |
-|![](docs/example3.gif) |![](docs/example4.gif) |
+|![](docs/example5.gif) |![](docs/example4.gif) |
 |![](docs/example7.gif) |![](docs/example8.gif) |
 
 
