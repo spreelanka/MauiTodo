@@ -9,7 +9,7 @@
     <Shell.TitleView >
         <VerticalStackLayout>
             <ImageButton Grid.Column="1" 
-                    Command="{Binding DeleteTodoListCommand}" HeightRequest="20" WidthRequest="20" VerticalOptions="Center" HorizontalOptions="End" >
+                    Command="{Binding DeleteTodoListCommand}" HeightRequest="40" WidthRequest="40" VerticalOptions="Center" HorizontalOptions="End" >
                 <ImageButton.Source>
                     <FontImageSource Glyph="{x:Static converters:IconFont.Delete}"
                                      Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"
@@ -43,7 +43,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="Fill" />
                                     <ImageButton Grid.Column="2" 
-                                        HeightRequest="20" WidthRequest="20" VerticalOptions="Center" HorizontalOptions="End"
+                                        HeightRequest="30" WidthRequest="30" VerticalOptions="Center" HorizontalOptions="End"
                                         Command="{Binding DeleteTodoItemCommand, Source={RelativeSource AncestorType={x:Type local:TodoListViewModel}}}"
                                         CommandParameter="{Binding Id}">
                                         <ImageButton.Source>

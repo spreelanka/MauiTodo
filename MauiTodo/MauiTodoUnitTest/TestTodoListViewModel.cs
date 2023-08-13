@@ -51,6 +51,12 @@ namespace MauiTodoUnitTest
                 .Returns(() => Task.CompletedTask)
                 .Verifiable();
 
+            dataProviderMoq.Setup(c => c.Save())
+                .Returns((Func<Task>)(async () =>
+                {
+                }))
+                .Verifiable();
+
             dialogServiceMoq = new Mock<IDialogService>();
             dialogServiceMoq.Setup(c => c.DisplayAlert(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((Func<string, string, string, string, Task<bool>>)((t, m, a, c) =>
@@ -58,6 +64,8 @@ namespace MauiTodoUnitTest
                     return Task.FromResult(true);
                 }))
                 .Verifiable();
+
+
 
             subject = new TodoListViewModel(dataProviderMoq.Object, logMoq.Object, navigationMoq.Object, dialogServiceMoq.Object);
 
@@ -422,6 +430,7 @@ namespace MauiTodoUnitTest
             await subject.GoBackCommand.ExecuteAsync("");
 
             dataProviderMoq.Verify(e => e.Put<TodoList>(It.IsAny<TodoList>()), Times.Once);
+            dataProviderMoq.Verify(e => e.Save(), Times.Once);
             navigationMoq.Verify(e => e.GoToAsync(It.IsAny<ShellNavigationState>()), Times.Once);
         }
 

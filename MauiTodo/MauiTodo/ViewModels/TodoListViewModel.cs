@@ -64,6 +64,7 @@ namespace MauiTodo.ViewModels
                     TodoList.Items.Where(e => e.Id == id).FirstOrDefault()
                 );
                 await dataProvider.Put(TodoList);
+                await dataProvider.Save();
             }
         }
 
@@ -71,7 +72,7 @@ namespace MauiTodo.ViewModels
         async Task GoBack()
         {
             await dataProvider.Put(TodoList);
-
+            await dataProvider.Save();
             await navigation.GoToAsync("..?q=1");
         }
 
