@@ -16,16 +16,16 @@
 
     <Grid RowDefinitions="*,64" ColumnDefinitions="*,64" Background="purple" VerticalOptions="FillAndExpand">
         <ScrollView Grid.RowSpan="2" Grid.ColumnSpan="2" Background="orange" VerticalOptions="FillAndExpand">
-            <Grid RowDefinitions="*,Auto" Background="pink" VerticalOptions="FillAndExpand">
+            <Grid RowDefinitions="90,*" Background="pink" VerticalOptions="FillAndExpand">
                 <Entry Text="{Binding TodoList.Title,Mode=TwoWay}"
                        Background="blue"
                        VerticalOptions="Start"
                                     HorizontalOptions="CenterAndExpand" />
-                <ListView Grid.Row="1" ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected" RowHeight="90" Background="tan" VerticalOptions="EndAndExpand">
+                <ListView Grid.Row="1" ItemsSource="{Binding TodoList.Items}" ItemSelected="ListView_ItemSelected" RowHeight="60" Background="tan" VerticalOptions="Fill">
                     <ListView.ItemTemplate >
                         <DataTemplate>
                             <ViewCell>
-                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center" Margin="10">
                                     <CheckBox IsChecked="{Binding Complete}"
                                         Grid.Column="0"/>
                                     <Entry
@@ -33,7 +33,7 @@
                                         Placeholder="New Item"
                                         Text="{Binding Title}"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="CenterAndExpand" />
+                                        HorizontalOptions="Fill" />
                                     <Button
                                         Grid.Column="2"
                                         Text="X"

@@ -10,13 +10,13 @@
                 <ListView.ItemTemplate >
                     <DataTemplate>
                         <ViewCell>
-                            <Grid>
+                            <Grid Margin="10">
                                 <Label
                                     TextColor="Black"
                                     BackgroundColor="Cyan"
                                     Text="{Binding Title}"
                                     VerticalOptions="Center"
-                                    HorizontalOptions="Center" />
+                                    HorizontalOptions="Fill" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
