@@ -1,7 +1,7 @@
 # MauiTodo
 
 ## todo
-[Project planning](MauiTodo%20plan.md) *wish i had a todolist for this...*
+[Project planning](MauiTodo%20plan.md) *wish i had a todolist app for this...*
 
 ## what
 a little dotnet MAUI todolist app with 
